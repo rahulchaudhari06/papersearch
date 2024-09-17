@@ -9,9 +9,9 @@ function App() {
     setVisibleSummary(visibleSummary === index ? null : index);
   };
 
-  const fetchPapers = async () => {
+  const fetchPapers = async (numberOfResults) => {
     const response = await fetch(
-      `http://export.arxiv.org/api/query?search_query=all:(blockchain OR web3 OR "smart contracts" OR "decentralized finance" OR "cryptocurrency")&start=0&max_results=25&sortBy=lastUpdatedDate&sortOrder=descending`
+      ` http://export.arxiv.org/api/query?search_query=all:(blockchain OR web3 OR "smart contracts" OR "decentralized finance" OR "cryptocurrency")&start=0&max_results=${numberOfResults}&sortBy=lastUpdatedDate&sortOrder=descending`
     );
     const data = await response.text();
     const parser = new DOMParser();
@@ -36,7 +36,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetchPapers();
+    fetchPapers(6);
   }, []);
 
   return (
@@ -47,12 +47,15 @@ function App() {
           Explore the latest research on Blockchain, Web3, DeFi, Crypto and
           more.
         </p>
+        <hr />
       </header>
-      <hr />
+
       <div className="content">
         {papers.map((paper, index) => (
           <div key={index} className="paper-card">
-            <h2 className="paper-title">{paper.title}</h2>
+            <a href={paper.pdfLink} target="_blank" rel="noopener noreferrer">
+              <h2 className="paper-title">{paper.title}</h2>
+            </a>
             <p>Published: {paper.published}</p>
             <button
               className="toggle-button"
@@ -64,12 +67,32 @@ function App() {
             {visibleSummary === index && (
               <div className="hidden-text">{paper.summary}</div>
             )}
-            <a href={paper.pdfLink} target="_blank" rel="noopener noreferrer">
-              View PDF
-            </a>
           </div>
         ))}
       </div>
+      <footer className="footer">
+        <p>
+          &copy; {new Date().getFullYear()} Rahul Chaudhari. All rights
+          reserved.
+        </p>
+        <p>
+          <a
+            href="https://twitter.com/cipherotaku04"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Twitter
+          </a>{" "}
+          |
+          <a
+            href="https://github.com/rahulchaudhari06"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </p>
+      </footer>
     </div>
   );
 }

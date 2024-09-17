@@ -26,9 +26,6 @@ body {
   box-sizing: border-box;
   transition: transform 0.3s ease;
 }
-/* .paper-card:hover {
-  transform: scale(1.1);
-} */
 
 .paper-card:hover {
   transform: translateY(-8px);
@@ -40,6 +37,10 @@ body {
   background-color: #516c49;
 }
 
+.paper-title {
+  font-family: Georgia;
+}
+
 .App {
   display: flex;
   flex-direction: column;
@@ -49,7 +50,7 @@ body {
 
 .content {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   width: 100%;
   max-width: 1200px;
   justify-items: center;
@@ -61,7 +62,6 @@ body {
   display: inline-block;
   margin-top: 10px;
   padding: 8px 12px;
-  border: 0.1px dotted black;
   color: #1e201e;
   border-radius: 5px;
   text-decoration: none;
@@ -80,4 +80,28 @@ body {
 
 .hidden-text {
   color: rgb(0, 0, 0);
+  font-family: helvetica, sans-serif;
+  margin: 10px;
+}
+
+hr {
+  border: 1px solid black;
+  margin: 10px;
+}
+
+.footer {
+  color: #1e201e;
+  text-align: center;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.footer a {
+  color: #1e201e;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
