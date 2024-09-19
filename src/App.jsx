@@ -36,7 +36,7 @@ function App() {
   };
 
   useEffect(() => {
-    fetchPapers(6);
+    fetchPapers(20);
   }, []);
 
   return (
