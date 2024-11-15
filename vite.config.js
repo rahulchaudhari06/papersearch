@@ -5,6 +5,6 @@ export default defineConfig({
   plugins: [react()],
   base: "/papersearchbyR",
   build: {
-    outDir: "root",
+    outDir: "docs",
   },
 });
