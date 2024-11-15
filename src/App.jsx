@@ -11,7 +11,7 @@ function App() {
 
   const fetchPapers = async (numberOfResults) => {
     const response = await fetch(
-      ` http://export.arxiv.org/api/query?search_query=all:(blockchain OR web3 OR "smart contracts" OR "decentralized finance" OR "cryptocurrency")&start=0&max_results=${numberOfResults}&sortBy=lastUpdatedDate&sortOrder=descending`
+      ` https://export.arxiv.org/api/query?search_query=all:(blockchain OR web3 OR "smart contracts" OR "decentralized finance" OR "cryptocurrency")&start=0&max_results=${numberOfResults}&sortBy=lastUpdatedDate&sortOrder=descending`
     );
     const data = await response.text();
     const parser = new DOMParser();
