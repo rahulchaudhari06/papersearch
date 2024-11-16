@@ -10,9 +10,10 @@ function App() {
   };
 
   const fetchPapers = async (numberOfResults) => {
-    const response = await fetch(
-      ` https://export.arxiv.org/api/query?search_query=all:(blockchain OR web3 OR "smart contracts" OR "decentralized finance" OR "cryptocurrency")&start=0&max_results=${numberOfResults}&sortBy=lastUpdatedDate&sortOrder=descending`
-    );
+    const proxyUrl = "https://cors-anywhere.herokuapp.com/"; // Add the proxy
+    const apiUrl = `https://export.arxiv.org/api/query?search_query=all:(blockchain OR web3 OR "smart contracts" OR "decentralized finance" OR "cryptocurrency")&start=0&max_results=${numberOfResults}&sortBy=lastUpdatedDate&sortOrder=descending`;
+
+    const response = await fetch(proxyUrl + apiUrl);
     const data = await response.text();
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(data, "application/xml");
