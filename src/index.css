@@ -1,0 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Aboreto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap");
+@font-face {
+  font-family: "Neighbor";
+  src: url(./assets/neighbor_thin.otf);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  background-color: black;
+}
+
+header {
+  position: relative;
+  z-index: 10;
+}
