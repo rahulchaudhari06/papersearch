@@ -3,8 +3,8 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/papersearchbyR",
+  base: "/papersearch",
   build: {
-    outDir: "docs",
+    outDir: "dist",
   },
 });

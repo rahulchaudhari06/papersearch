@@ -142,6 +142,15 @@ function App() {
             >
               GitHub
             </a>
+            |
+            <a
+              href="https://www.linkedin.com/in/rahul-chaudhari-2a45832aa?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:text-blue-500 mx-2"
+            >
+              Linkedin
+            </a>
           </p>
         </footer>
       </div>
