@@ -73,7 +73,7 @@ function App() {
 
   return (
     <div
-      className="  dark:bg-black bg-white  dark:bg-grid-small-white/[0.2] bg-grid-small-black/[0.2] text-white min-h-screen "
+      className="  bg-black bg-grid-small-white/[0.25] text-white min-h-screen "
       style={{
         WebkitMaskImage:
           "radial-gradient(circle, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 0) 100%)",
