@@ -8,6 +8,8 @@ function App() {
   const [selectedTopic, setSelectedTopic] = useState("web3");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const [startIndex, setStartIndex] = useState(0);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const handleToggle = (index) => {
     setVisibleSummary(visibleSummary === index ? null : index);
@@ -15,23 +17,32 @@ function App() {
 
   const handleTopicChange = (event) => {
     setSelectedTopic(event.target.value);
+    setStartIndex(0);
+    setPapers([]); // Clear existing papers
   };
 
-  const fetchPapers = async (numberOfResults) => {
-    setLoading(true);
-    const query = searchQuery ? searchQuery : selectedTopic; // Prioritize searchQuery over selectedTopic
-    const apiUrl = `https://export.arxiv.org/api/query?search_query=all:(${query})&start=0&max_results=${numberOfResults}&sortBy=lastUpdatedDate&sortOrder=descending`;
+  const fetchPapers = async (numberOfResults, start, isLoadingMore = false) => {
+    const loadingFunction = isLoadingMore ? setLoadingMore : setLoading;
+    loadingFunction(true);
 
-    const response = await fetch(apiUrl);
-    const data = await response.text();
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(data, "application/xml");
+    const query = searchQuery ? searchQuery : selectedTopic;
+    const apiUrl = `https://export.arxiv.org/api/query?search_query=all:(${query})&start=${start}&max_results=${numberOfResults}&sortBy=lastUpdatedDate&sortOrder=descending`;
 
-    renderPapers(xmlDoc);
-    setLoading(false);
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, "application/xml");
+
+      renderPapers(xmlDoc, isLoadingMore);
+    } catch (error) {
+      console.error("Error fetching papers:", error);
+    } finally {
+      loadingFunction(false);
+    }
   };
 
-  const renderPapers = (xmldoc) => {
+  const renderPapers = (xmldoc, isLoadingMore) => {
     const entries = Array.from(xmldoc.getElementsByTagName("entry"));
     const fetchedPapers = entries.map((entry) => ({
       title: entry.getElementsByTagName("title")[0].textContent,
@@ -43,11 +54,20 @@ function App() {
         ".pdf",
       summary: entry.getElementsByTagName("summary")[0].textContent.trim(),
     }));
-    setPapers(fetchedPapers);
+
+    setPapers((prevPapers) =>
+      isLoadingMore ? [...prevPapers, ...fetchedPapers] : fetchedPapers
+    );
+  };
+
+  const handleLoadMore = () => {
+    const nextStartIndex = startIndex + 10;
+    setStartIndex(nextStartIndex);
+    fetchPapers(10, nextStartIndex, true);
   };
 
   useEffect(() => {
-    fetchPapers(10);
+    fetchPapers(10, 0);
   }, [selectedTopic, searchQuery]);
 
   return (
@@ -61,7 +81,6 @@ function App() {
             Explore the latest research on the topics you want!
           </p>
 
-          {/* Responsive search controls */}
           <div className="flex flex-col md:flex-row md:justify-center md:items-center gap-4 mt-6 px-4">
             <div className="w-full md:w-auto">
               <label
@@ -75,7 +94,11 @@ function App() {
                 type="text"
                 placeholder="Enter keywords..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setStartIndex(0);
+                  setPapers([]);
+                }}
                 className="w-full md:w-auto bg-black text-gray-300 border border-gray-600 rounded-lg p-2"
               />
             </div>
@@ -111,47 +134,70 @@ function App() {
               <div className="animate-spin rounded-full h-8 w-8 md:h-12 md:w-12 border-t-4 border-blue-500"></div>
             </div>
           ) : (
-            <ul className="space-y-4 md:space-y-6">
-              {papers.map((paper, index) => (
-                <li
-                  key={index}
-                  className="rounded-lg py-4 md:py-6 hover:shadow-lg transition-shadow"
-                >
-                  <div className="flex flex-col">
-                    <a
-                      href={paper.pdfLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-base md:text-lg lg:text-2xl font-semibold text-gray-300 hover:text-blue-300 transition-colors mb-2 font-Orbitron line-clamp-2 md:line-clamp-none"
-                    >
-                      {paper.title}
-                    </a>
-                    <p className="text-xs md:text-sm text-gray-400 mb-2 md:mb-4">
-                      Published: {paper.published}
-                    </p>
-
-                    <button
-                      onClick={() => handleToggle(index)}
-                      className="w-32 md:w-40 pl-2 flex items-center justify-center rounded-md border border-slate-600 py-2 text-xs md:text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-black hover:border-slate-800 focus:text-white focus:bg-black focus:border-slate-800"
-                      type="button"
-                    >
-                      {visibleSummary === index
-                        ? "Hide Summary"
-                        : "Show Summary"}
-                    </button>
-
-                    {visibleSummary === index && (
-                      <div
-                        className="mt-3 md:mt-4 text-gray-300 border-t border-gray-700 pt-3 md:pt-4 text-sm md:text-lg font-Neighbor"
-                        style={{ maxHeight: "150px", overflowY: "auto" }}
+            <>
+              <ul className="space-y-4 md:space-y-6">
+                {papers.map((paper, index) => (
+                  <li
+                    key={index}
+                    className="rounded-lg py-4 md:py-6 hover:shadow-lg transition-shadow"
+                  >
+                    <div className="flex flex-col">
+                      <a
+                        href={paper.pdfLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-base md:text-lg lg:text-2xl font-semibold text-gray-300 hover:text-blue-300 transition-colors mb-2 font-Orbitron line-clamp-2 md:line-clamp-none"
                       >
-                        {paper.summary}
-                      </div>
+                        {paper.title}
+                      </a>
+                      <p className="text-xs md:text-sm text-gray-400 mb-2 md:mb-4">
+                        Published: {paper.published}
+                      </p>
+
+                      <button
+                        onClick={() => handleToggle(index)}
+                        className="w-32 md:w-40 pl-2 flex items-center justify-center rounded-md border border-slate-600 py-2 text-xs md:text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-black hover:border-slate-800 focus:text-white focus:bg-black focus:border-slate-800"
+                        type="button"
+                      >
+                        {visibleSummary === index
+                          ? "Hide Summary"
+                          : "Show Summary"}
+                      </button>
+
+                      {visibleSummary === index && (
+                        <div
+                          className="mt-3 md:mt-4 text-gray-300 border-t border-gray-700 pt-3 md:pt-4 text-sm md:text-lg font-Neighbor"
+                          style={{ maxHeight: "150px", overflowY: "auto" }}
+                        >
+                          {paper.summary}
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              {papers.length > 0 && (
+                <div className="flex justify-center mt-8">
+                  <button
+                    onClick={handleLoadMore}
+                    disabled={loadingMore}
+                    className={`bg-dark dark:bg-dark-2 border-dark dark:border-dark-2 border rounded-md inline-flex items-center justify-center py-3 px-7 text-center text-base font-medium text-slate-400 hover:bg-body-color hover:border-body-color disabled:bg-gray-3 disabled:border-gray-3 disabled:text-dark-5 max-h-5
+                   ${loadingMore ? " cursor-not-allowed" : ""} 
+                   ${loadingMore ? "text-gray-300" : "text-slate-300"} py-2`}
+                  >
+                    {loadingMore ? (
+                      <span className="flex items-center">
+                        Loading...
+                        <div className="w-4 h-4 border-t-2 rounded-full animate-spin ml-2"></div>
+                      </span>
+                    ) : (
+                      "Load More Papers"
                     )}
-                  </div>
-                </li>
-              ))}
-            </ul>
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </main>
 
