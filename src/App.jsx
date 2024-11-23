@@ -49,11 +49,6 @@ function App() {
           "radial-gradient(circle, rgba(0, 0, 0, 1) 90%, rgba(0, 0, 0, 0) 100%)",
         WebkitMaskSize: "cover%",
         maskSize: "cover%",
-
-        // -webkit-mask-size: 200%;
-        // mask-size: 200%;
-        // -webkit-mask-position: center 50%;
-        // mask-position: center 50%;
       }}
     >
       <div className="">
@@ -119,7 +114,7 @@ function App() {
           </ul>
         </main>
 
-        <footer className="text-center py-8 border-t border-gray-800 mt-12">
+        <footer className="text-center py-8 border-t font-Neighbor text-sky-300 border-gray-800 mt-12">
           <p className="text-gray-500 text-sm">
             &copy; {new Date().getFullYear()} Rahul Chaudhari. All rights
             reserved.
