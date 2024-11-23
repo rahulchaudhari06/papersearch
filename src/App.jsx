@@ -13,6 +13,20 @@ function App() {
     { label: "Smart Contracts", value: '"smart contracts"' },
     { label: "DeFi", value: '"decentralized finance"' },
     { label: "Cryptocurrency", value: "cryptocurrency" },
+    {
+      label: "Artificial Intelligence",
+      value: '"artificial intelligence" OR AI',
+    },
+    { label: "Machine Learning", value: '"machine learning" OR ML' },
+    { label: "Computer Science", value: '"computer science"' },
+    {
+      label: "Cybersecurity",
+      value: "cybersecurity OR 'information security'",
+    },
+    { label: "Robotics", value: "robotics OR 'robot systems'" },
+    { label: "Chemistry", value: "chemistry" },
+    { label: "Biology", value: "biology OR 'life sciences'" },
+    { label: "Physics", value: "physics" },
   ];
 
   const handleToggle = (index) => {
@@ -71,8 +85,7 @@ function App() {
         <header className="text-center py-10 font-Aboreto">
           <h1 className="text-6xl sm:text-8xl font-bold">PaperSearch</h1>
           <p className="text-lg lg:text-3xl mt-4 text-gray-300">
-            Explore the latest research on Blockchain, Web3, DeFi, Crypto, and
-            more.
+            Explore the latest research on the topics you want!
           </p>
           <div className="mt-6">
             <label htmlFor="topic" className="text-gray-400 text-lg mr-4">
