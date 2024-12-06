@@ -202,11 +202,10 @@ function App() {
         </main>
 
         <footer className="text-center py-6 md:py-8 border-t border-gray-800 mt-8 md:mt-12">
-          <p className="text-gray-500 text-xs md:text-sm">
-            &copy; {new Date().getFullYear()} Rahul Chaudhari. All rights
-            reserved.
-          </p>
           <p className="mt-2 text-sm md:text-base">
+            <p className="text-xs font-thin font-Neighbor">
+              Made with 🫶🏼 by ~Rahul
+            </p>
             <a
               href="https://twitter.com/cipherotaku04"
               target="_blank"
